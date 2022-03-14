@@ -86,7 +86,7 @@ def RadixSort(l, baza=10):
         exp *= baza
 
 
-def RadixSort2(l, baza=65536):
+def RadixSortShift(l, baza=65536):
     # 65536
     maxx = max(l)
     exp = 0
@@ -113,10 +113,8 @@ def RadixSort2(l, baza=65536):
         exp += (10)
 
 
-def ShellSort(l):
 
-    gaps = [1750,701, 301, 132, 57, 23, 10, 4, 1]  # ciura
-
+def ShellSort(l,gaps):
     n = len(l)
     for gap in gaps:
         for i in range(gap, n):
@@ -128,63 +126,42 @@ def ShellSort(l):
 
             l[j] = aux
 
+shelg=[]
+shelg.append([44782196, 19903198, 8845866, 3931496, 1747331, 776591, 345152, 153401,68178, 30301, 13467, 5985, 2660, 1182, 525, 233, 103, 46, 20, 9, 4, 1]) #tokuda
 
-def ShellSort2(l):
-
-
-    gaps = [44782196, 19903198, 8845866, 3931496, 1747331, 776591, 345152, 153401,
-            68178, 30301, 13467, 5985, 2660, 1182, 525, 233, 103, 46, 20, 9, 4, 1]#tokuda
-
-    n = len(l)
-    for gap in gaps:
-        for i in range(gap, n):
-            aux = l[i]
-            j = i
-            while j - gap >= 0 and l[j - gap] > aux:
-                l[j] = l[j - gap]
-                j -= gap
-
-            l[j] = aux
-
+shelg.append([149109795, 66271020, 29453787, 13090572, 5818032, 2585792, 1149241, 510774, 227011, 100894, 44842, 19930, 8858, 3937, 1750, 701, 301, 132, 57, 23, 10, 4, 1])#ciura extinssa
 
 f = open('sortari/teste.in')
 # dd = open('struc/sortari/asd.in','w')
 for i in range(int(f.readline().split()[2])):
     c = f.readline().split()
     maxim = int(c[5])
-    l = [[maxim]for _ in range(6)]
+    l = [maxim]   
     for _ in range(int(c[2])-1):
-        l[0].append(random.randrange(maxim))
-        l[1].append(random.randrange(maxim))
-        l[2].append(random.randrange(maxim))
-        # l[3].append(random.randrange(maxim))
-        # l[4].append(random.randrange(maxim))
-        # l[5].append(random.randrange(maxim))
-        k = 0
-    for gg in [ShellSort,ShellSort2]:
+        l.append(random.randrange(maxim))
+    k = 0
+    for gg in [InsertionSort]:
+    # for gg in [RadixSort,RadixSortShift,MergeSort,ShellSort,InsertionSort,CountingSort,-1]:
+        hh=l[:]
         if gg == -1:
-            print('tim ---->>>test:', i, end='-->')
-            # dd.write('itmsort--->>test '+str(i)+'-->>')
-            start = time.time()
-            l[k].sort()
-            end = time.time()
-            # if check(l[k]):
-            #     dd.write(str(end - start )+'\n')
-            # else:
 
-            #     dd.write('eroare'+'\n')
-            print(end - start if check(l[k]) else 'eroare')
+            print('tim ---->>>test:', i, end='-->')
+            start = time.time()
+            hh.sort()
+            end = time.time()
+            print(end - start if check(hh) else 'eroare')
+        elif gg == ShellSort:
+            for inx,j in enumerate(shelg): 
+                print(f'{gg} gap {inx}  ---->>>test:', i, end='-->')
+                start = time.time()
+                ShellSort(hh, j)
+                end = time.time()
+                print(end - start if check(hh) else 'eroare')
+                hh=l[:]
         else:
             print(f'{gg}  ---->>>test:', i, end='-->')
-            # dd.write(str(gg)+'--->>test '+str(i)+'-->>')
             start = time.time()
-            gg(l[k])
+            gg(hh)
             end = time.time()
-            print(end - start if check(l[k]) else 'eroare')
-            # if check(l[k]):
-            #     dd.write(str(end - start )+'\n')
-            # else:
-
-            #     dd.write('eroare'+'\n')
-
+            print(end - start if check(hh) else 'eroare')
         k += 1
