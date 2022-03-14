@@ -1,8 +1,9 @@
-import random
-import time
+import random,time
 
 
 def InsertionSort(l):
+    if len(l) > 10**6:  # aiae
+        return
     for i in range(1, len(l)):
         j = i-1
         c = l[i]
@@ -86,6 +87,31 @@ def RadixSort(l, baza=10):
         exp *= baza
 
 
+def RadixSortdivide(l, baza=65536):
+    maxx = max(l)
+    exp = 1
+    n = len(l)
+    while maxx // exp != 0:
+        frecv = [0] * baza
+        out = [0] * n
+
+        for i in range(n):
+            frecv[l[i] // exp % baza] += 1
+
+        for i in range(1, baza):
+            frecv[i] += frecv[i - 1]
+
+        for i in range(len(l)-1, -1, -1):
+            aux = l[i] // exp % baza
+            out[frecv[aux] - 1] = l[i]
+            frecv[aux] -= 1
+
+        for i in range(len(l)):
+            l[i] = out[i]
+
+        exp *= baza
+
+
 def RadixSortShift(l, baza=65536):
     # 65536
     maxx = max(l)
@@ -110,11 +136,10 @@ def RadixSortShift(l, baza=65536):
             l[i] = out[i]
         if exp == 0:
             exp = 1
-        exp += (10)
+        exp += 10
 
 
-
-def ShellSort(l,gaps):
+def ShellSort(l, gaps):
     n = len(l)
     for gap in gaps:
         for i in range(gap, n):
@@ -126,42 +151,43 @@ def ShellSort(l,gaps):
 
             l[j] = aux
 
-shelg=[]
-shelg.append([44782196, 19903198, 8845866, 3931496, 1747331, 776591, 345152, 153401,68178, 30301, 13467, 5985, 2660, 1182, 525, 233, 103, 46, 20, 9, 4, 1]) #tokuda
 
-shelg.append([149109795, 66271020, 29453787, 13090572, 5818032, 2585792, 1149241, 510774, 227011, 100894, 44842, 19930, 8858, 3937, 1750, 701, 301, 132, 57, 23, 10, 4, 1])#ciura extinssa
+shellarray = []
+shellarray.append([44782196, 19903198, 8845866, 3931496, 1747331, 776591, 345152, 153401,
+                  68178, 30301, 13467, 5985, 2660, 1182, 525, 233, 103, 46, 20, 9, 4, 1])  # tokuda
 
-f = open('sortari/teste.in')
-# dd = open('struc/sortari/asd.in','w')
+shellarray.append([149109795, 66271020, 29453787, 13090572, 5818032, 2585792, 1149241, 510774, 227011,
+                  100894, 44842, 19930, 8858, 3937, 1750, 701, 301, 132, 57, 23, 10, 4, 1])  # ciura extinssa
+
+f = open('teste.in')
 for i in range(int(f.readline().split()[2])):
     c = f.readline().split()
     maxim = int(c[5])
-    l = [maxim]   
+    l = [maxim]
     for _ in range(int(c[2])-1):
         l.append(random.randrange(maxim))
     k = 0
-    for gg in [InsertionSort]:
-    # for gg in [RadixSort,RadixSortShift,MergeSort,ShellSort,InsertionSort,CountingSort,-1]:
-        hh=l[:]
+    for gg in [RadixSort, RadixSortShift,RadixSortdivide, MergeSort, ShellSort, InsertionSort, CountingSort, -1]:
+        hh = l[:]
         if gg == -1:
 
             print('tim ---->>>test:', i, end='-->')
             start = time.time()
             hh.sort()
             end = time.time()
-            print(end - start if check(hh) else 'eroare')
+            print(end - start if check(hh) else 'nu am putut sorta (v-v)')
         elif gg == ShellSort:
-            for inx,j in enumerate(shelg): 
+            for inx, j in enumerate(shellarray):
                 print(f'{gg} gap {inx}  ---->>>test:', i, end='-->')
                 start = time.time()
                 ShellSort(hh, j)
                 end = time.time()
-                print(end - start if check(hh) else 'eroare')
-                hh=l[:]
+                print(end - start if check(hh) else 'nu am putut sorta (v-v)')
+                hh = l[:]
         else:
             print(f'{gg}  ---->>>test:', i, end='-->')
             start = time.time()
             gg(hh)
             end = time.time()
-            print(end - start if check(hh) else 'eroare')
+            print(end - start if check(hh) else 'nu am putut sorta (v-v)')
         k += 1
