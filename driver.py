@@ -37,10 +37,11 @@ def MergeSort(l):
             if left[i] > right[j]:
                 l[indx] = right[j]
                 j += 1
-            else:
+                indx += 1
+            if j < len(right) and left[i] <= right[j]:
                 l[indx] = left[i]
+                indx += 1
                 i += 1
-            indx += 1
 
         while i < len(left):
             l[indx] = left[i]
@@ -85,7 +86,7 @@ def RadixSort(l, baza=10):
         exp *= baza
 
 
-def RadixSort2(l, baza=10):
+def RadixSort2(l, baza=65536):
     # 65536
     maxx = max(l)
     exp = 0
@@ -114,7 +115,8 @@ def RadixSort2(l, baza=10):
 
 def ShellSort(l):
 
-    gaps = [1750, 701, 301, 132, 57, 23, 10, 4, 1]  # ciura
+    gaps = [1750,701, 301, 132, 57, 23, 10, 4, 1]  # ciura
+
     n = len(l)
     for gap in gaps:
         for i in range(gap, n):
@@ -129,8 +131,10 @@ def ShellSort(l):
 
 def ShellSort2(l):
 
-    gaps = [1, 4, 9, 20, 46, 103, 233, 525, 1182, 2660, 5985, 13467, 30301, 68178,
-            153401, 345152, 776591, 1747331, 3931496, 8845866, 19903198, 44782196]  # tokuda
+
+    gaps = [44782196, 19903198, 8845866, 3931496, 1747331, 776591, 345152, 153401,
+            68178, 30301, 13467, 5985, 2660, 1182, 525, 233, 103, 46, 20, 9, 4, 1]#tokuda
+
     n = len(l)
     for gap in gaps:
         for i in range(gap, n):
@@ -142,16 +146,45 @@ def ShellSort2(l):
 
             l[j] = aux
 
-f = open('teste.in')
+
+f = open('sortari/teste.in')
+# dd = open('struc/sortari/asd.in','w')
 for i in range(int(f.readline().split()[2])):
     c = f.readline().split()
     maxim = int(c[5])
-    l = [maxim]
+    l = [[maxim]for _ in range(6)]
     for _ in range(int(c[2])-1):
-        l.append(random.randrange(maxim))
-    for gg in [sorted, RadixSort, ShellSort, MergeSort, InsertionSort, CountingSort]:
-        print(f'{gg}  ---->>>test:', i, end='-->')
-        start = time.time()
-        gg(l)
-        end = time.time()
-        print(end - start if check(l) else 'eroare')
+        l[0].append(random.randrange(maxim))
+        l[1].append(random.randrange(maxim))
+        l[2].append(random.randrange(maxim))
+        # l[3].append(random.randrange(maxim))
+        # l[4].append(random.randrange(maxim))
+        # l[5].append(random.randrange(maxim))
+        k = 0
+    for gg in [ShellSort,ShellSort2]:
+        if gg == -1:
+            print('tim ---->>>test:', i, end='-->')
+            # dd.write('itmsort--->>test '+str(i)+'-->>')
+            start = time.time()
+            l[k].sort()
+            end = time.time()
+            # if check(l[k]):
+            #     dd.write(str(end - start )+'\n')
+            # else:
+
+            #     dd.write('eroare'+'\n')
+            print(end - start if check(l[k]) else 'eroare')
+        else:
+            print(f'{gg}  ---->>>test:', i, end='-->')
+            # dd.write(str(gg)+'--->>test '+str(i)+'-->>')
+            start = time.time()
+            gg(l[k])
+            end = time.time()
+            print(end - start if check(l[k]) else 'eroare')
+            # if check(l[k]):
+            #     dd.write(str(end - start )+'\n')
+            # else:
+
+            #     dd.write('eroare'+'\n')
+
+        k += 1
